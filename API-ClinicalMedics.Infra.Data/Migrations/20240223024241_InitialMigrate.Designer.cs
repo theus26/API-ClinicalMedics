@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API_ClinicalMedics.Infra.Data.Migrations
 {
     [DbContext(typeof(ClinicalsMedicsContext))]
-    [Migration("20231211042630_initial")]
-    partial class initial
+    [Migration("20240223024241_InitialMigrate")]
+    partial class InitialMigrate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,72 +23,73 @@ namespace API_ClinicalMedics.Infra.Data.Migrations
 
             modelBuilder.Entity("API_ClinicalMedics.Domain.Entities.Attachaments", b =>
                 {
-                    b.Property<long>("IdAttachament")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("CPF")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("int");
 
                     b.Property<string>("ContentPDF")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("ContentPDF");
 
-                    b.Property<long>("IdUser")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Name")
+                    b.Property<string>("FileName")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("FileName");
 
-                    b.Property<string>("TipoDocumento")
+                    b.Property<int>("IdUser")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TypeDocument")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("TypeDocument");
 
-                    b.HasKey("IdAttachament");
+                    b.HasKey("Id");
 
                     b.HasIndex("IdUser");
 
-                    b.ToTable("Attachaments");
+                    b.ToTable("Attachaments", (string)null);
                 });
 
             modelBuilder.Entity("API_ClinicalMedics.Domain.Entities.Users", b =>
                 {
-                    b.Property<long>("IdUser")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("int");
 
                     b.Property<string>("CPF")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("CPF");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("Name");
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("Password");
 
                     b.Property<string>("Role")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("Role");
 
-                    b.HasKey("IdUser");
+                    b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("User", (string)null);
                 });
 
             modelBuilder.Entity("API_ClinicalMedics.Domain.Entities.Attachaments", b =>
                 {
-                    b.HasOne("API_ClinicalMedics.Domain.Entities.Users", "User")
+                    b.HasOne("API_ClinicalMedics.Domain.Entities.Users", null)
                         .WithMany()
                         .HasForeignKey("IdUser")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }

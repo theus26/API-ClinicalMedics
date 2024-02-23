@@ -1,40 +1,42 @@
-﻿using API_ClinicalMedics.Domain.Interfaces;
+﻿using API_ClinicalMedics.Domain.Entities;
+using API_ClinicalMedics.Domain.Interfaces;
 using API_ClinicalMedics.Infra.Data.Context;
 
 namespace API_ClinicalMedics.Infra.Data.Repository
 {
-    public class BaseRepository<T> : IBaseRepository<T> where T : class
+    public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : BaseEntity
     {
-        public ClinicalsMedicsContext _context { get; set; }
+        protected readonly ClinicalsMedicsContext _clinicalsMedicsContext;
 
-        public BaseRepository()
+        public BaseRepository(ClinicalsMedicsContext mySqlContext)
         {
-            
-               _context = new ClinicalsMedicsContext();
-            
+            _clinicalsMedicsContext = mySqlContext;
         }
+
+        public void Insert(TEntity obj)
+        {
+            _clinicalsMedicsContext.Set<TEntity>().Add(obj);
+            _clinicalsMedicsContext.SaveChanges();
+        }
+
+        public void Update(TEntity obj)
+        {
+            _clinicalsMedicsContext.Entry(obj).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            _clinicalsMedicsContext.SaveChanges();
+        }
+
         public void Delete(int id)
         {
-            _context.Set<T>().Remove(Select(id));
-            _context.SaveChanges();
+            _clinicalsMedicsContext.Set<TEntity>().Remove(Select(id));
+            _clinicalsMedicsContext.SaveChanges();
         }
 
-        public void Insert(T obj)
-        {
-            _context.Set<T>().Add(obj);
-            _context.SaveChanges();
-        }
+        public IList<TEntity> Select() =>
+            _clinicalsMedicsContext.Set<TEntity>().ToList();
 
-        public IList<T> Select() =>
-            _context.Set<T>().ToList();
+        public TEntity Select(int id) =>
+            _clinicalsMedicsContext.Set<TEntity>().Find(id);
 
-        public T Select(int id) =>
-            _context.Set<T>().Find(id);
-
-        public void Update(T obj)
-        {
-            _context.Entry(obj).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-            _context.SaveChanges();
-        }
     }
 }
+

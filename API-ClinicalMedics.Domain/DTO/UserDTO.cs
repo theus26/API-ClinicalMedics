@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace API_ClinicalMedics.Domain.Entities
+namespace API_ClinicalMedics.Domain.DTO
 {
-    public class Users : BaseEntity
-    { 
+    public class UserDTO
+    {
         [Required]
         public string Name { get; set; }
         [Required]
