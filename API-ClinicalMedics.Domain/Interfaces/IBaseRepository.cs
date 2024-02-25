@@ -8,7 +8,7 @@
 
         void Delete(int id);
 
-        IList<T> Select();
+        IQueryable<T> Select();
 
         T Select(int id);
     }

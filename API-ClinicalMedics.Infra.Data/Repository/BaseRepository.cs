@@ -31,8 +31,8 @@ namespace API_ClinicalMedics.Infra.Data.Repository
             _clinicalsMedicsContext.SaveChanges();
         }
 
-        public IList<TEntity> Select() =>
-            _clinicalsMedicsContext.Set<TEntity>().ToList();
+        public IQueryable<TEntity> Select() =>
+            _clinicalsMedicsContext.Set<TEntity>();
 
         public TEntity Select(int id) =>
             _clinicalsMedicsContext.Set<TEntity>().Find(id);

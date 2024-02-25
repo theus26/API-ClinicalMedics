@@ -10,7 +10,7 @@ namespace API_ClinicalMedics.Domain.Interfaces
 
         void Delete(int id);
 
-        IList<TEntity> Get();
+        IQueryable<TEntity> Get();
 
         TEntity GetById(int id);
         Users EncryptUserData(UserDTO userDto);

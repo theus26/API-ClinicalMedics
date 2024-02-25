@@ -7,10 +7,10 @@ namespace API_ClinicalMedics.Infra.Data.Context
     public class ClinicalsMedicsContext : DbContext
     {
 
-        //public ClinicalsMedicsContext(DbContextOptions<ClinicalsMedicsContext> options) : base(options)
-        //{
+        public ClinicalsMedicsContext(DbContextOptions<ClinicalsMedicsContext> options) : base(options)
+        {
 
-        //}
+        }
         public DbSet<Attachaments> Attachaments { get; set; }
         public DbSet<Users> Users { get; set; }
 

@@ -16,7 +16,7 @@ namespace API_ClinicalMedics.Infra.Data.Mapping
                 .HasConversion(prop => prop.ToString(), prop => prop)
                 .IsRequired()
                 .HasColumnName("ContentPDF")
-                .HasColumnType("varchar(100)");
+                .HasColumnType("longtext");
 
             builder.Property(prop => prop.TypeDocument)
                 .HasConversion(prop => prop.ToString(), prop => prop)

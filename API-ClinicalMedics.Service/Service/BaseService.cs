@@ -27,9 +27,9 @@ namespace API_ClinicalMedics.Service.Service
             var attachaments = new Attachaments()
             {
                 ContentPDF = base64,
-                FileName = Path.GetExtension(attachamentDto.File.FileName),
+                FileName = attachamentDto.File.FileName.Replace(Path.GetExtension(attachamentDto.File.FileName),""),
                 IdUser = attachamentDto.IdUser,
-                TypeDocument = attachamentDto.DocumentType
+                TypeDocument = Path.GetExtension(attachamentDto.File.FileName)
             };
             return attachaments;
         }
@@ -50,7 +50,7 @@ namespace API_ClinicalMedics.Service.Service
 
         public void Delete(int id) => baseRepository.Delete(id);
 
-        public IList<TEntity> Get() => baseRepository.Select();
+        public IQueryable<TEntity> Get() => baseRepository.Select();
 
         public TEntity GetById(int id) => baseRepository.Select(id);
 
