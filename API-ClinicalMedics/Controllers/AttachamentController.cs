@@ -2,6 +2,7 @@
 using API_ClinicalMedics.Domain.Entities;
 using API_ClinicalMedics.Domain.Interfaces;
 using API_ClinicalMedics.Service.Validators;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API_ClinicalMedics.Controllers
@@ -42,6 +43,7 @@ namespace API_ClinicalMedics.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "manager")]
         public IActionResult GetAllAnexo()
         {
             try
@@ -60,6 +62,7 @@ namespace API_ClinicalMedics.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "manager")]
         public IActionResult AddAttachment([FromForm] AttachamentDTO attachmentDTO)
         {
             try
