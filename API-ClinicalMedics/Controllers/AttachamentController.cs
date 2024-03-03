@@ -9,14 +9,11 @@ namespace API_ClinicalMedics.Controllers
 {
     [ApiController]
     [Route("[controller]/[action]")]
-    public class AttachamentController : ControllerBase
+    public class AttachamentController(
+        IBaseService<Attachaments> baseAttachamentService,
+        IAttachamentService attachamentService)
+        : ControllerBase
     {
-        private IBaseService<Attachaments> _baseAttachamentService;
-
-        public AttachamentController(IBaseService<Attachaments> baseAttachamentService)
-        {
-            _baseAttachamentService = baseAttachamentService;
-        }
 
         [HttpGet]
         public ActionResult HealthCheck()
@@ -29,7 +26,7 @@ namespace API_ClinicalMedics.Controllers
         {
             try
             {
-                var getAnexoById = _baseAttachamentService.GetById(id);
+                var getAnexoById = baseAttachamentService.GetById(id);
                 return Ok(getAnexoById);
             }
             catch (Exception ex)
@@ -48,7 +45,7 @@ namespace API_ClinicalMedics.Controllers
         {
             try
             {
-                var getPacientes = _baseAttachamentService.Get();
+                var getPacientes = baseAttachamentService.Get();
                 return Ok(getPacientes);
             }
             catch (Exception ex)
@@ -67,8 +64,8 @@ namespace API_ClinicalMedics.Controllers
         {
             try
             {
-                var attachament = _baseAttachamentService.AttachamentsExam(attachmentDTO);
-                var insertAttachament = _baseAttachamentService.Add<AttachamentValidator>(attachament);
+                var attachament = attachamentService.AttachamentsExam(attachmentDTO);
+                var insertAttachament = baseAttachamentService.Add<AttachamentValidator>(attachament);
                 return Ok(insertAttachament);
             }
 

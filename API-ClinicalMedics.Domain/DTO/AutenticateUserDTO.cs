@@ -2,13 +2,10 @@
 
 namespace API_ClinicalMedics.Domain.DTO
 {
-    public class UserDTO
+    public class AutenticateUserDTO
     {
         [Required]
-        public string Name { get; set; }
-        [Required]
-        public string CPF { get; set; }
-        public string? Role { get; set; }
+        public string Cpf { get; set; }
         [Required]
         public string Password { get; set; }
     }

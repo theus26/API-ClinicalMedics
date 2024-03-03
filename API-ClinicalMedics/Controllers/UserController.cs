@@ -9,15 +9,9 @@ namespace API_ClinicalMedics.Controllers
 {
     [ApiController]
     [Route("[controller]/[action]")]
-    public class UserController : ControllerBase
+    public class UserController(IBaseService<Users> baseService, IUserService userService)
+        : ControllerBase
     {
-        private IBaseService<Users> _baseUserService;
-
-        public UserController(IBaseService<Users> baseUserService)
-        {
-            _baseUserService = baseUserService;
-        }
-
         [HttpGet]
         public ActionResult HealthCheck()
         {
@@ -30,8 +24,8 @@ namespace API_ClinicalMedics.Controllers
         {
             try
             {
-                var user = _baseUserService.EncryptUserData(userDTO);
-                var insertUser = _baseUserService.Add<UserValidator>(user);
+                var user = userService.EncryptUserData(userDTO);
+                var insertUser = baseService.Add<UserValidator>(user);
                 return Ok(insertUser);
             }
             catch (Exception ex)
@@ -46,12 +40,12 @@ namespace API_ClinicalMedics.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "manager")]
+        [Authorize(Roles="manager")]
         public IActionResult GetAllPacientes()
         {
             try
             {
-                var getAllPacientes = _baseUserService.Get();
+                var getAllPacientes = baseService.Get();
                 return Ok(getAllPacientes);
             }
             catch (Exception ex)
@@ -71,7 +65,7 @@ namespace API_ClinicalMedics.Controllers
         {
             try
             {
-                var getPacientById = _baseUserService.GetById(id);
+                var getPacientById = baseService.GetById(id);
                 return Ok(getPacientById);
 
             }
@@ -82,6 +76,22 @@ namespace API_ClinicalMedics.Controllers
                     Status = StatusCodes.Status412PreconditionFailed,
                     Message = ex.Message
                 });
+            }
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public IActionResult AutenticateUser(AutenticateUserDTO autenticateUser)
+        {
+            try
+            {
+                var autentication = userService.AutenticateUser(autenticateUser);
+                return Ok(autentication);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                throw;
             }
         }
     }

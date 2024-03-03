@@ -4,10 +4,11 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNetCore.Mvc;
 
 namespace API_ClinicalMedics.Service.Service
 {
-    public class TokenService
+    public class TokenService : Controller
     {
         public static string CreateToken(Users user)
         {
@@ -19,7 +20,7 @@ namespace API_ClinicalMedics.Service.Service
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.Sid, user.Name),
-                    new Claim(ClaimTypes.Email, user.Role),
+                    new Claim(ClaimTypes.Role, user.Role),
 
 
                 }),

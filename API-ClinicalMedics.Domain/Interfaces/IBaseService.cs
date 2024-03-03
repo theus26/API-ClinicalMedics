@@ -13,8 +13,6 @@ namespace API_ClinicalMedics.Domain.Interfaces
         IQueryable<TEntity> Get();
 
         TEntity GetById(int id);
-        Users EncryptUserData(UserDTO userDto);
-        Attachaments AttachamentsExam(AttachamentDTO attachamentDto);
 
         TEntity Update<TValidator>(TEntity obj) where TValidator : AbstractValidator<TEntity>;
     }
