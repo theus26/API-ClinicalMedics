@@ -13,6 +13,7 @@ namespace API_ClinicalMedics.Controllers
         : ControllerBase
     {
         [HttpGet]
+        [AllowAnonymous]
         public ActionResult HealthCheck()
         {
             return Ok("I'm alive and working");
@@ -41,12 +42,12 @@ namespace API_ClinicalMedics.Controllers
 
         [HttpGet]
         [Authorize(Roles="manager")]
-        public IActionResult GetAllPacientes()
+        public IActionResult GetAllPatientes()
         {
             try
             {
-                var getAllPacientes = baseService.Get();
-                return Ok(getAllPacientes);
+                var allPatientes = baseService.Get();
+                return Ok(allPatientes);
             }
             catch (Exception ex)
             {
@@ -59,14 +60,14 @@ namespace API_ClinicalMedics.Controllers
 
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet]
         [AllowAnonymous]
-        public IActionResult GetPatientById(int id)
+        public IActionResult GetPatientById(int idUser)
         {
             try
             {
-                var getPacientById = baseService.GetById(id);
-                return Ok(getPacientById);
+                var patientFoud = baseService.GetById(idUser);
+                return Ok(patientFoud);
 
             }
             catch (Exception ex)

@@ -11,7 +11,7 @@ namespace API_ClinicalMedics.Service.Service
         {
             string base64 = ConvertFileToBase64(attachamentDto.File);
 
-            var attachaments = new Attachaments()
+            var attachaments = new Attachaments
             {
                 ContentPDF = base64,
                 FileName = attachamentDto.File.FileName.Replace(Path.GetExtension(attachamentDto.File.FileName), ""),
@@ -21,6 +21,33 @@ namespace API_ClinicalMedics.Service.Service
             return attachaments;
         }
 
+        public IEnumerable<ResultAttachamentDTO> GetAttachamentByIdUser(int idUser)
+        {
+            var ListAttachaments = new List<ResultAttachamentDTO>();
+            var attachamentFromUser = GetAttachamentFromUser(idUser);
+
+            if (attachamentFromUser is not null)
+            {
+                foreach (var att in attachamentFromUser)
+                {
+                    var resultAttachamentFound = new ResultAttachamentDTO
+                    {
+                        FileName = att?.FileName,
+                        ContentPdf = att?.ContentPDF
+                    };
+                    ListAttachaments.Add(resultAttachamentFound);
+                }
+
+                return ListAttachaments;
+            }
+
+            throw new ArgumentNullException($"Attachaments don´t find for user {idUser}");
+        }
+
+        private IQueryable<Attachaments?> GetAttachamentFromUser(int idUser)
+        {
+            return baseRepository.Select().Where(x => x.IdUser == idUser).AsQueryable();
+        }
         private static string ConvertFileToBase64(IFormFile file)
         {
             using var ms = new MemoryStream();

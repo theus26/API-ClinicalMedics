@@ -6,7 +6,6 @@ namespace API_ClinicalMedics.Infra.Data.Context
 {
     public class ClinicalsMedicsContext : DbContext
     {
-
         public ClinicalsMedicsContext(DbContextOptions<ClinicalsMedicsContext> options) : base(options)
         {
 
@@ -17,7 +16,6 @@ namespace API_ClinicalMedics.Infra.Data.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
             modelBuilder.Entity<Users>(new UserMap().Configure);
             modelBuilder.Entity<Attachaments>(new AttachamentMap().Configure);
         }

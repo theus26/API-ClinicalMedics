@@ -23,6 +23,7 @@ namespace API_ClinicalMedics.Infra.Data.Mapping
                 .IsRequired()
                 .HasColumnName("CPF")
                 .HasColumnType("varchar(100)");
+            
 
             builder.Property(prop => prop.Password)
                 .HasConversion(prop => prop.ToString(), prop => prop)

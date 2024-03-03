@@ -21,7 +21,7 @@ namespace API_ClinicalMedics
         {
             var OpenCors = "_openCors";
             services.AddControllers();
-            var key = Encoding.ASCII.GetBytes(ChaveJWT.ChaveSecreta);
+            var key = Encoding.ASCII.GetBytes(ChaveJwt.ChaveSecreta);
             services.AddAuthentication(x =>
                 {
                     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

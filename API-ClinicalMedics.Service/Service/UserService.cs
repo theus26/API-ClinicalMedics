@@ -11,40 +11,19 @@ namespace API_ClinicalMedics.Service.Service
     {
         public Users EncryptUserData(UserDTO userDTO)
         {
-            string role = SetRoleUser(userDTO.Role);
-            var hashPassword = CreateHashMd5(userDTO.Password);
-            userDTO.Password = hashPassword;
-            userDTO.Role = role;
-            userDTO.CPF.Replace(".", "").Replace("-", "");
-            var user = mapper.Map<Users>(userDTO);
-            return user;
-        }
-        private static string CreateHashMd5(string input)
-        {
-            MD5 md5Hash = MD5.Create();
-            // Convert string to bytes
-            byte[] data = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(input));
+            userDTO.CPF = CleanCpf(userDTO.CPF);
+            bool haveCpf = ValidateExistenceOfCpf(userDTO.CPF);
 
-            // Create an StringBuilder
-            StringBuilder sBuilder = new StringBuilder();
-
-            // Format every byte as an hex
-            for (int i = 0; i < data.Length; i++)
+            if (!haveCpf)
             {
-                sBuilder.Append(data[i].ToString("x2"));
+                userDTO.Role = SetRoleUser(userDTO.Role);
+                userDTO.Password = CreateHashMd5(userDTO.Password);
+                var user = mapper.Map<Users>(userDTO);
+                return user;
             }
-
-            return sBuilder.ToString();
+            throw new ArgumentNullException($"{userDTO.CPF} already exist");
         }
-
-        private static string SetRoleUser(string role)
-        {
-            if (role is null)
-            {
-                return "employee";
-            }
-            return "manager";
-        }
+        
         public ResultAutenticateDTO AutenticateUser(AutenticateUserDTO autenticateUser)
         {
             if (string.IsNullOrEmpty(autenticateUser.Cpf) || string.IsNullOrEmpty(autenticateUser.Password))
@@ -75,6 +54,37 @@ namespace API_ClinicalMedics.Service.Service
                 NameUser = user.Name,
                 Token = token
             };
+        }
+
+        private static string CreateHashMd5(string input)
+        {
+            MD5 md5Hash = MD5.Create();
+            // Convert string to bytes
+            byte[] data = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(input));
+
+            // Create an StringBuilder
+            StringBuilder sBuilder = new StringBuilder();
+
+            // Format every byte as an hex
+            for (int i = 0; i < data.Length; i++)
+            {
+                sBuilder.Append(data[i].ToString("x2"));
+            }
+
+            return sBuilder.ToString();
+        }
+        private static string CleanCpf(string cpf)
+        {
+            return cpf.Replace(".", "").Replace("-", "");
+        }
+        private bool ValidateExistenceOfCpf(string cpf)
+        {
+            return baseRepository.Select().Any(x => x.CPF == cpf);
+
+        }
+        private static string SetRoleUser(string? role)
+        {
+            return role is null ? "user" : "manager";
         }
     }
 }

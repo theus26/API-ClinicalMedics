@@ -10,28 +10,30 @@ namespace API_ClinicalMedics.Controllers
     [ApiController]
     [Route("[controller]/[action]")]
     public class AttachamentController(
-        IBaseService<Attachaments> baseAttachamentService,
+        IBaseService<Attachaments> baseService,
         IAttachamentService attachamentService)
         : ControllerBase
     {
 
         [HttpGet]
+        [AllowAnonymous]
         public ActionResult HealthCheck()
         {
             return Ok("I'm alive and working");
         }
 
         [HttpGet]
+        [Authorize(Roles = "manager,user")]
         public IActionResult GetAnexosById(int id)
         {
             try
             {
-                var getAnexoById = baseAttachamentService.GetById(id);
-                return Ok(getAnexoById);
+                var attachament = baseService.GetById(id);
+                return Ok(attachament);
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status400BadRequest, new ResponseDTO()
+                return StatusCode(StatusCodes.Status400BadRequest, new ResponseDTO
                 {
                     Status = StatusCodes.Status400BadRequest,
                     Message = ex.Message,
@@ -41,16 +43,35 @@ namespace API_ClinicalMedics.Controllers
 
         [HttpGet]
         [Authorize(Roles = "manager")]
-        public IActionResult GetAllAnexo()
+        public IActionResult GetAllAttachaments()
         {
             try
             {
-                var getPacientes = baseAttachamentService.Get();
-                return Ok(getPacientes);
+                var attachamentsEnumerable = baseService.Get();
+                return Ok(attachamentsEnumerable);
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status400BadRequest, new ResponseDTO()
+                return StatusCode(StatusCodes.Status400BadRequest, new ResponseDTO
+                {
+                    Status = StatusCodes.Status400BadRequest,
+                    Message = ex.Message,
+                });
+            }
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "manager,user")]
+        public IActionResult GetAttachamentByIdUser(int idUser)
+        {
+            try
+            {
+                var attachametFromUserFound = attachamentService.GetAttachamentByIdUser(idUser);
+                return Ok(attachametFromUserFound);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, new ResponseDTO
                 {
                     Status = StatusCodes.Status400BadRequest,
                     Message = ex.Message,
@@ -65,13 +86,13 @@ namespace API_ClinicalMedics.Controllers
             try
             {
                 var attachament = attachamentService.AttachamentsExam(attachmentDTO);
-                var insertAttachament = baseAttachamentService.Add<AttachamentValidator>(attachament);
+                var insertAttachament = baseService.Add<AttachamentValidator>(attachament);
                 return Ok(insertAttachament);
             }
 
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status400BadRequest, new ResponseDTO()
+                return StatusCode(StatusCodes.Status400BadRequest, new ResponseDTO
                 {
                     Status = StatusCodes.Status400BadRequest,
                     Message = ex.Message,

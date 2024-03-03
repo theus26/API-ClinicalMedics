@@ -13,7 +13,7 @@ namespace API_ClinicalMedics.Service.Service
         public static string CreateToken(Users user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(ChaveJWT.ChaveSecreta);
+            var key = Encoding.ASCII.GetBytes(ChaveJwt.ChaveSecreta);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {

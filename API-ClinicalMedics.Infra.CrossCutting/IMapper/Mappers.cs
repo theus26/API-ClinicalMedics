@@ -11,7 +11,5 @@ namespace API_ClinicalMedics.Infra.CrossCutting.IMapper
             CreateMap<Users, UserDTO>().ReverseMap();
             CreateMap<Attachaments, AttachamentDTO>().ReverseMap();
         }
-
-        
     }
 }
