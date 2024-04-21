@@ -21,8 +21,6 @@ namespace API_ClinicalMedics.Service.Service
                 {
                     new Claim(ClaimTypes.Sid, user.Name),
                     new Claim(ClaimTypes.Role, user.Role),
-
-
                 }),
                 Expires = DateTime.UtcNow.AddHours(2),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

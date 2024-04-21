@@ -80,6 +80,25 @@ namespace API_ClinicalMedics.Controllers
             }
         }
 
+        [HttpDelete]
+        [AllowAnonymous]
+        public IActionResult DeletePatient(int idUser)
+        {
+            try
+            {
+                baseService.Delete(idUser);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, new ResponseDTO
+                {
+                    Status = StatusCodes.Status400BadRequest,
+                    Message = ex.Message,
+                });
+            }
+        }
+
         [HttpPost]
         [AllowAnonymous]
         public IActionResult AutenticateUser(AutenticateUserDTO autenticateUser)
@@ -91,8 +110,11 @@ namespace API_ClinicalMedics.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
-                throw;
+                return StatusCode(StatusCodes.Status412PreconditionFailed, new ResponseDTO()
+                {
+                    Status = StatusCodes.Status412PreconditionFailed,
+                    Message = ex.Message
+                });
             }
         }
     }

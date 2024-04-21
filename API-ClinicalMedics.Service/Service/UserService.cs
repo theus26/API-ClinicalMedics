@@ -4,6 +4,7 @@ using API_ClinicalMedics.Domain.Interfaces;
 using AutoMapper;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace API_ClinicalMedics.Service.Service
 {
@@ -26,36 +27,42 @@ namespace API_ClinicalMedics.Service.Service
         
         public ResultAutenticateDTO AutenticateUser(AutenticateUserDTO autenticateUser)
         {
-            if (string.IsNullOrEmpty(autenticateUser.Cpf) || string.IsNullOrEmpty(autenticateUser.Password))
+
+            var hashedPassword = ValidateUserData(autenticateUser);
+            var user = baseRepository.Select().FirstOrDefault(x => x.CPF == autenticateUser.Cpf && x.Password == hashedPassword);
+
+            if (user is not null)
+            {
+                var token = TokenService.CreateToken(user);
+
+                return new ResultAutenticateDTO
+                {
+                    Role = user.Role,
+                    IdUser = user.Id,
+                    NameUser = user.Name,
+                    Token = token
+                };
+            }
+
+            throw new ArgumentNullException();
+        }
+
+        private string ValidateUserData(AutenticateUserDTO autenticateUserDTO)
+        {
+            if (string.IsNullOrEmpty(autenticateUserDTO.Cpf) || string.IsNullOrEmpty(autenticateUserDTO.Password))
             {
                 throw new ArgumentNullException();
             }
 
-            string hashedPassword = CreateHashMd5(autenticateUser.Password);
+            string hashedPassword = CreateHashMd5(autenticateUserDTO.Password);
 
             if (string.IsNullOrEmpty(hashedPassword))
             {
                 throw new ArgumentNullException();
             }
-
-            var user = baseRepository.Select().FirstOrDefault(x => x.CPF == autenticateUser.Cpf && x.Password == hashedPassword);
-
-            if (user is null)
-            {
-                throw new ArgumentNullException();
-            }
-
-            var token = TokenService.CreateToken(user);
-
-            return new ResultAutenticateDTO()
-            {
-                Role = user.Role,
-                IdUser = user.Id,
-                NameUser = user.Name,
-                Token = token
-            };
+            return hashedPassword;
         }
-
+        
         private static string CreateHashMd5(string input)
         {
             MD5 md5Hash = MD5.Create();
@@ -75,7 +82,8 @@ namespace API_ClinicalMedics.Service.Service
         }
         private static string CleanCpf(string cpf)
         {
-            return cpf.Replace(".", "").Replace("-", "");
+            const string regex = @"[^\w\s]";
+            return Regex.Replace(cpf, regex, "");
         }
         private bool ValidateExistenceOfCpf(string cpf)
         {

@@ -24,11 +24,11 @@ namespace API_ClinicalMedics.Controllers
 
         [HttpGet]
         [Authorize(Roles = "manager,user")]
-        public IActionResult GetAnexosById(int id)
+        public IActionResult GetAnexosById(int attachamentId)
         {
             try
             {
-                var attachament = baseService.GetById(id);
+                var attachament = baseService.GetById(attachamentId);
                 return Ok(attachament);
             }
             catch (Exception ex)
@@ -61,7 +61,7 @@ namespace API_ClinicalMedics.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "manager,user")]
+        [AllowAnonymous]
         public IActionResult GetAttachamentByIdUser(int idUser)
         {
             try
@@ -79,13 +79,32 @@ namespace API_ClinicalMedics.Controllers
             }
         }
 
+        [HttpDelete]
+        [AllowAnonymous]
+        public IActionResult DeleteAttachament(int attachamentId)
+        {
+            try
+            {
+                baseService.Delete(attachamentId);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, new ResponseDTO
+                {
+                    Status = StatusCodes.Status400BadRequest,
+                    Message = ex.Message,
+                });
+            }
+        }
+
         [HttpPost]
         [Authorize(Roles = "manager")]
         public IActionResult AddAttachment([FromForm] AttachamentDTO attachmentDTO)
         {
             try
             {
-                var attachament = attachamentService.AttachamentsExam(attachmentDTO);
+                var attachament = attachamentService.SaveAttachamentsExam(attachmentDTO);
                 var insertAttachament = baseService.Add<AttachamentValidator>(attachament);
                 return Ok(insertAttachament);
             }

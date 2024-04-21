@@ -1,13 +1,14 @@
 ﻿using API_ClinicalMedics.Domain.DTO;
 using API_ClinicalMedics.Domain.Entities;
 using API_ClinicalMedics.Domain.Interfaces;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 
 namespace API_ClinicalMedics.Service.Service
 {
-    public class AttachamentService(IBaseRepository<Attachaments> baseRepository) : IAttachamentService
+    public class AttachamentService(IBaseRepository<Attachaments> baseRepository, IMapper _mapper) : IAttachamentService
     {
-        public Attachaments AttachamentsExam(AttachamentDTO attachamentDto)
+        public Attachaments SaveAttachamentsExam(AttachamentDTO attachamentDto)
         {
             string base64 = ConvertFileToBase64(attachamentDto.File);
 
@@ -21,24 +22,13 @@ namespace API_ClinicalMedics.Service.Service
             return attachaments;
         }
 
-        public IEnumerable<ResultAttachamentDTO> GetAttachamentByIdUser(int idUser)
+        public IEnumerable<UserAttachmentsDTO> GetAttachamentByIdUser(int idUser)
         {
-            var ListAttachaments = new List<ResultAttachamentDTO>();
             var attachamentFromUser = GetAttachamentFromUser(idUser);
 
-            if (attachamentFromUser is not null)
+            if (attachamentFromUser.Any())
             {
-                foreach (var att in attachamentFromUser)
-                {
-                    var resultAttachamentFound = new ResultAttachamentDTO
-                    {
-                        FileName = att?.FileName,
-                        ContentPdf = att?.ContentPDF
-                    };
-                    ListAttachaments.Add(resultAttachamentFound);
-                }
-
-                return ListAttachaments;
+                return _mapper.Map<IEnumerable<UserAttachmentsDTO>>(attachamentFromUser);
             }
 
             throw new ArgumentNullException($"Attachaments don´t find for user {idUser}");
