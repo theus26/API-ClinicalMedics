@@ -16,10 +16,9 @@ namespace API_ClinicalMedics
     public class Startup(IConfiguration configuration)
     {
         public IConfiguration Configuration { get; } = configuration;
-
+        private readonly string OpenCors = "_openCors";
         public void ConfigureServices(IServiceCollection services)
         {
-            var OpenCors = "_openCors";
             services.AddControllers();
             var key = Encoding.ASCII.GetBytes(ChaveJwt.ChaveSecreta);
             services.AddAuthentication(x =>
@@ -94,7 +93,7 @@ namespace API_ClinicalMedics
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthorization();
-            
+            app.UseCors(OpenCors);
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

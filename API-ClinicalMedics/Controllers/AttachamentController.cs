@@ -24,7 +24,7 @@ namespace API_ClinicalMedics.Controllers
 
         [HttpGet]
         [Authorize(Roles = "manager,user")]
-        public IActionResult GetAnexosById(int attachamentId)
+        public IActionResult GetAttachamentById(int attachamentId)
         {
             try
             {
